@@ -1,170 +1,192 @@
-🏨 Hotel Management System
+# 🏨 Hotel Management System
 
-A complete hotel management solution designed for academic and mid-size real-world use.
-The system manages room reservations, customers, employees, services, billing, and hotel operations with realistic workflows.
+A complete hotel management solution designed for academic projects and medium-scale real-world hotel operations.
+The system manages room reservations, customers, employees, services, billing, and complete hotel workflows with a production-like structure.
 
-📌 Project Overview
+---
 
-This project simulates the operations of a boutique hotel chain, providing:
+## 📌 Project Overview
 
-Room booking & availability checking
+This project simulates the operations of a modern hotel, providing realistic end-to-end functionality:
 
-Customer management
+* **Room booking & availability checking**
+* **Customer management**
+* **Check-in / Check-out workflow**
+* **Service ordering** (Food, Spa, Laundry, Transportation, etc.)
+* **Employee management**
+* **Multi-room reservations**
+* **Financial reporting**
+* **Manager dashboard with analytics**
 
-Check-in / Check-out workflow
+The design follows proper **database normalization**, **business rules**, and **multi-table relationships**.
 
-Service ordering (Food, Spa, Laundry, etc.)
+---
 
-Employee management
+## 🧱 Database Structure (8 Core Tables)
 
-Multi-room reservations
+### 1. **Customers**
 
-Financial reports
+Stores all customer details:
 
-Manager dashboard with analytics
+* Name, Email, Phone, Address
+* Date of birth
+* Loyalty points
+* Registration date
 
-The design follows proper database normalization, realistic business rules, and multi-table interactions.
+### 2. **RoomTypes**
 
-🧱 Database Structure (8 Core Tables)
-1. Customers
+Defines the available room categories:
 
-Stores customer information including name, email, phone, address, date of birth, loyalty points, and registration date.
+* Standard, Deluxe, Suite, Family, Presidential
+* Capacity
+* Base price per night
+* Description & amenities
 
-2. RoomTypes
+### 3. **Rooms**
 
-Defines each room category:
+Represents each physical hotel room:
 
-Standard, Deluxe, Suite, Family, Presidential
+* Room number, floor, smoking status
+* **Type** *(FK → RoomTypes)*
+* Status: Available, Occupied, Maintenance, Cleaning
 
-Capacity, base price per night
+### 4. **Reservations**
 
-Description and amenities
+Stores reservation details:
 
-3. Rooms
+* Customer
+* Check-in & check-out dates
+* Adults / children
+* Total amount
+* Status: Confirmed, CheckedIn, CheckedOut, Cancelled, NoShow
+* Special requests
+* Created by employee
 
-Represents each physical room:
+### 5. **ReservationRooms** *(Junction Table)*
 
-Room number, floor, smoking status
+Allows one reservation to contain multiple rooms.
 
-Type (FK → RoomTypes)
+* Saves **price per night** for each room
+* Supports group/family bookings
 
-Status: Available, Occupied, Maintenance, Cleaning
+### 6. **Employees**
 
-4. Reservations
+Employee profile information:
 
-Contains complete reservation data:
+* Name, position, email, phone
+* Hire date
+* Active status
 
-Customer, dates, adults/children
+### 7. **Services**
 
-Total amount
+Defines hotel services:
 
-Reservation status (Confirmed, CheckedIn, CheckedOut, Cancelled, NoShow)
+* Food, Spa, Laundry, Transportation
+* Name, category, price
 
-Special requests
+### 8. **ReservationServices**
 
-Created by employee
+Stores service orders for guests:
 
-5. ReservationRooms (Junction Table)
+* Reservation ID
+* Service ID
+* Quantity, time, total price
+* Served by employee
 
-Allows one reservation to include multiple rooms (M:N relationship).
-Stores price paid per night for each room.
+---
 
-6. Employees
+## 🧠 Key System Complexities
 
-Employee details: name, position, email, phone, hire date, and active status.
+The system includes realistic hotel logic, including:
 
-7. Services
+* Checking **room availability** using non-overlapping date queries
+* Calculating:
 
-Any service offered by the hotel:
+  * Occupancy rate
+  * Monthly revenue
+  * Most-occupied room types
+* Generating housekeeping schedules
+* Multi-step workflows:
 
-Food, Spa, Laundry, Transportation
+  * Cancel reservation → update availability + remove services
+  * Check-out → calculate bill + update room status + add loyalty points
 
-Service name, category, price
+---
 
-8. ReservationServices
+## 🧾 Example SQL Queries
 
-Stores service orders made by guests during their stay:
+Common analytical queries include:
 
-Reservation ID
+* Find available rooms (NOT EXISTS)
+* Occupancy percentage by room type
+* Customer history with total spending
+* Monthly revenue (rooms + services)
+* Top 10 loyal customers
+* Rooms occupied more than 200 nights / year
+* Employee activity report
 
-Service ID
+---
 
-Quantity, time, total price
+## 🖥️ Application Features (WinForms / WPF)
 
-Served by employee
+* Dashboard with color-coded room status
+* Room search with photos
+* Customer registration
+* Reservation creation workflow
+* Check-in / Check-out wizard
+* Add services during stay with live billing updates
+* Employee views for daily operations
+* Manager analytics dashboard with charts
 
-🧠 Key System Complexities
+---
 
-Checking room availability using advanced non-overlapping date queries
+## 📊 Sample Dataset Recommendation
 
-Calculating:
+To make the demo realistic:
 
-Occupancy rate
+* **80–100 rooms**
+* **300–400 customers**
+* **500+ reservations**
+* **800+ service orders**
 
-Monthly revenue
+---
 
-Most-occupied room types
+## 🚀 Optional Enhancements
 
-Generating housekeeping schedules
+* Add a `Photos` table (room images using varbinary)
+* Employee hierarchy (manager → employees)
+* Trigger to auto-update loyalty points on checkout
+* Stored Procedure: `FindBestAvailableRoom` for room upgrades
 
-Multi-table cascading operations:
+---
 
-Cancel reservation → updates multiple tables
+## 📁 Ideal Project Structure (GitHub)
 
-Check-out → calculate final bill, update room status & loyalty points
+```
+HotelManagementSystem/
+│
+├── Database/
+│   ├── schema.sql
+│   ├── seed_data.sql
+│
+├── App/
+│   ├── Forms/
+│   ├── Models/
+│   ├── Services/
+│   ├── Repositories/
+│   ├── Utils/
+│   └── App.csproj
+│
+├── README.md
+└── LICENSE
+```
 
-🧾 Example SQL Queries
+---
 
-Find available rooms in date range (non-equijoin, NOT EXISTS)
+If you want, I can also:
 
-Occupancy percentage by room type
-
-Customer history with total spending
-
-Monthly revenue from rooms + services
-
-Top 10 loyal customers
-
-Rooms occupied 200+ nights per year
-
-Employee activity report
-
-🖥️ Application Features (WinForms / WPF)
-
-Dashboard with color-coded room occupancy
-
-Room search with photo display
-
-Customer registration
-
-Reservation creation flow
-
-Check-in / Check-out wizards
-
-Add extra services during stay (live bill updates)
-
-Employee view for organizing daily operations
-
-Manager analytics with charts
-
-📊 Sample Dataset Recommendation
-
-To make the demo feel real:
-
-80–100 rooms
-
-300–400 customers
-
-500+ reservations
-
-800+ service orders
-
-🚀 Optional Enhancements
-
-Add a Photos table (varbinary)
-
-Employee hierarchy (manager/subordinates)
-
-Trigger to auto-update loyalty points on check-out
-
-Stored Procedure: FindBestAvailableRoom for room upgrades
+* Add **badges** (build status, stars, etc.)
+* Add **screenshots section**
+* Create **SQL diagrams**
+* Generate **sample seed data**
+* Write a **professional GitHub README.md** with advanced formatting
